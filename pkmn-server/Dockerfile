@@ -51,7 +51,7 @@ RUN cd / && \
 ### Stage 2: Create dummy certificate files
 ### info: https://flewkey.com/blog/2020-07-12-nds-constraint.html
 ###
-FROM debian:11 AS builder_dummy-certs
+FROM debian:11 AS builder_dummy_certs
 
 RUN apt update && apt -y install \
         curl \
@@ -72,7 +72,7 @@ RUN mkdir /dummy-certs && cd /dummy-certs/ && \
 ###
 ### Stage 3: Build pkmn-classic-framework
 ###
-FROM debian:11 AS builder_pkmn-classic-framework
+FROM debian:11 AS builder_pkmn_classic_framework
 
 RUN apt update && apt -y install \
         curl \
@@ -84,7 +84,7 @@ RUN git clone --depth 1 https://github.com/mm201/pkmn-classic-framework.git && \
     cd pkmn-classic-framework/ && \
     sed -i -e 's/git@github\.com:/https:\/\/github\.com\//g' .gitmodules && \
     git submodule update --init && \
-    find ./ -name *.config | xargs -n 1 sed -i -e 's/connectionString="Server=gts;/connectionString="Server=localhost;/g' && \
+    find ./ -name *.config | xargs -n 1 sed -i -e 's/connectionString="Server=gts;/connectionString="Server=mariadb;/g' && \
     cd gts/ && \
     sed -i -e 's/<Reference Include=\"System.Web.Entity\" \/>//g' gts.csproj && \
     nuget install System.Web.Http.Common && \
@@ -112,8 +112,8 @@ ARG VERSION_HTTPD
 # Copy build artifacts from previous stages
 COPY --from=builder_openssl /$VERSION_OPENSSL /$VERSION_OPENSSL
 COPY --from=builder_openssl /$VERSION_HTTPD /$VERSION_HTTPD
-COPY --from=builder_dummy-certs /dummy-certs /dummy-certs
-COPY --from=builder_pkmn-classic-framework /pkmn-classic-framework /pkmn-classic-framework
+COPY --from=builder_dummy_certs /dummy-certs /dummy-certs
+COPY --from=builder_pkmn_classic_framework /pkmn-classic-framework /pkmn-classic-framework
 COPY ./gts_dump/gts_dump.sql /gts_dump.sql
 COPY --from=builder_twisted /usr/local/lib/python2.7/site-packages /usr/local/lib/python2.7/dist-packages
 
@@ -134,11 +134,11 @@ RUN apt update && apt -y --no-install-recommends install \
         vim \
     && ln -s /usr/bin/python2.7 /usr/bin/python
 
-### Install PHP 7.4 and MariaDB
+### Install PHP 7.4 and MariaDB-client
 RUN curl https://packages.sury.org/php/apt.gpg -o /etc/apt/trusted.gpg.d/php.gpg && \
     echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list && \
     apt update && apt -y --no-install-recommends install \
-        mariadb-server \
+        mariadb-client \
         php7.4 \
         php7.4-mysql \
         php7.4-sqlite3 \
@@ -167,25 +167,10 @@ RUN mkdir /etc/apache2/certs && \
 RUN cd /var/www/ && \
     git clone --depth 1 https://github.com/EnergyCube/CoWFC.git && \
     git clone --depth 1 https://github.com/EnergyCube/dwc_network_server_emulator.git && \
-    sed -i -e "s/db_user = root/db_user = cowfc/g" CoWFC/Web/config.ini && \
-    sed -i -e "s/db_pass = passwordhere/db_pass = cowfc/g" CoWFC/Web/config.ini && \
-    sed -i -e "s/recaptcha_enabled = 1/recaptcha_enabled = 0/g" CoWFC/Web/config.ini && \
     chmod 777 CoWFC/Web/bans.log && \
     touch dwc_network_server_emulator/gpcm.db && \
     chmod 777 dwc_network_server_emulator/ -R && \
     echo "\npokemondpds\t2\tRwBpAHIAYQBmAGYAZQA_" >> dwc_network_server_emulator/gamestats.cfg
-
-### Setup CoWFC database
-RUN service mariadb start && \
-    echo "CREATE DATABASE cowfc; \
-          CREATE USER 'cowfc'@'localhost' IDENTIFIED BY 'cowfc'; \
-          GRANT ALL PRIVILEGES ON *.* TO 'cowfc'@'localhost'; \
-          FLUSH PRIVILEGES;" | mysql --user=root && \
-    mysql --user=root --database=cowfc < /var/www/CoWFC/SQL/cowfc.sql && \
-    echo "INSERT INTO users (Username, Password, Rank) \
-          VALUES ('$ADMIN_USERNAME', \
-                  '`/var/www/CoWFC/SQL/bcrypt-hash "$ADMIN_PASSWORD"`', \
-                  '1');" | mysql --user=root --database=cowfc
 
 ### Install CoWFC web interface
 RUN cd /var/www/ && \
@@ -199,14 +184,6 @@ RUN cd /var/www/ && \
     mkdir gamestats2.gs.nintendowifi.net && \
     mv /pkmn-classic-framework/gts/publish/_PublishedWebsites/gts/* gamestats2.gs.nintendowifi.net/
 
-### Setup GTS database
-RUN echo "[mysqld]\nlower_case_table_names=1" >> /etc/mysql/my.cnf && \
-    service mariadb restart && \
-    echo "CREATE DATABASE gts; \
-          CREATE USER 'gts'@'localhost' IDENTIFIED BY 'gts'; \
-          GRANT ALL ON *.* TO 'gts'@'localhost';" | mysql --user=root && \
-    mysql --user=root --database=gts < /gts_dump.sql
-
 ### Configure Apache base settings
 RUN cd /etc/apache2/ && \
     echo "ServerName localhost\nHttpProtocolOptions Unsafe LenientMethods Allow0.9" >> apache2.conf && \
@@ -215,10 +192,16 @@ RUN cd /etc/apache2/ && \
 
 ### Setup Apache VirtualHosts
 RUN cd /etc/apache2/ && \
-    mv /var/www/dwc_network_server_emulator/tools/apache-hosts/* sites-available/ && \
-    sed -i -e 's/ServerAlias "nas.nintendowifi.net"//g' \
-           -e 's/ServerAlias "nas.nintendowifi.net, nas.nintendowifi.net"//g' \
-        sites-available/nas-naswii-dls1-conntest.nintendowifi.net.conf
+    if [ -d /var/www/dwc_network_server_emulator/tools/apache-hosts ]; then \
+        mv /var/www/dwc_network_server_emulator/tools/apache-hosts/* sites-available/ && \
+        if [ -f sites-available/nas-naswii-dls1-conntest.nintendowifi.net.conf ]; then \
+            sed -i -e 's/ServerAlias "nas.nintendowifi.net"//g' \
+                   -e 's/ServerAlias "nas.nintendowifi.net, nas.nintendowifi.net"//g' \
+                sites-available/nas-naswii-dls1-conntest.nintendowifi.net.conf; \
+        fi; \
+    else \
+        echo "Apache configs not found in barronwaffles repo, skipping..."; \
+    fi
 
 ### Create GTS VirtualHost
 COPY ./pkmn-server/apache-configs/gamestats2.gs.nintendowifi.net.conf /etc/apache2/sites-available/

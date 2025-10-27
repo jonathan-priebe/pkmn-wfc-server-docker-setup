@@ -1,4 +1,27 @@
 services:
+  mariadb:
+    container_name: mariadb
+    image: mariadb:10.6
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: cowfc
+    command: 
+    - --lower_case_table_names=1
+    - --character-set-server=utf8mb4
+    - --collation-server=utf8mb4_general_ci
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306/tcp"
+    networks:
+      - wfc_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_ROOT_PASSWORD:-rootpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   dnsmasq:
     container_name: dnsmasq
     image: strm/dnsmasq
@@ -9,17 +32,41 @@ services:
       - "53:53/udp"
     cap_add:
       - NET_ADMIN
+    networks:
+      - wfc_network
+
   pkmn-server:
     container_name: pkmn-server
     build:
+      context: .
       dockerfile: ./pkmn-server/Dockerfile
       args:
-        - ADMIN_USERNAME=admin
-        - ADMIN_PASSWORD=opensesame
+        - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+        - ADMIN_PASSWORD=${ADMIN_PASSWORD:-opensesame}
+    environment:
+      # Admin credentials
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-opensesame}
+      
+      # Database connection
+      - DB_HOST=mariadb
+      - DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-rootpassword}
+      
+      # CoWFC database
+      - DB_COWFC_USER=${DB_COWFC_USER:-cowfc}
+      - DB_COWFC_PASS=${DB_COWFC_PASS:-cowfc}
+      - DB_COWFC_NAME=${DB_COWFC_NAME:-cowfc}
+      
+      # GTS database
+      - DB_GTS_USER=${DB_GTS_USER:-gts}
+      - DB_GTS_PASS=${DB_GTS_PASS:-gts}
+      - DB_GTS_NAME=${DB_GTS_NAME:-gts}
+    depends_on:
+      mariadb:
+        condition: service_healthy
     ports:
       - "8880:80/tcp"
       - "443:443/tcp"
-      - "3306:3306/tcp"
       - "8000:8000/tcp"
       - "9000:9000/tcp"
       - "9001:9001/tcp"
@@ -28,9 +75,25 @@ services:
       - "9003:9003/tcp"
       - "9998:9998/tcp"
       - "27500:27500/tcp"
+      - "27500:27500/udp"
       - "27900:27900/tcp"
+      - "27900:27900/udp"
       - "27901:27901/tcp"
+      - "27901:27901/udp"
       - "28910:28910/tcp"
       - "29900:29900/tcp"
       - "29901:29901/tcp"
       - "29920:29920/tcp"
+      - "41000-41003:41000-41003/udp"
+      - "41005-41027:41005-41027/udp"
+      - "41029-41050:41029-41050/udp"
+      - "41052-41099:41052-41099/udp"
+    networks:
+      - wfc_network
+
+volumes:
+  mariadb_data:
+
+networks:
+  wfc_network:
+    driver: bridge
