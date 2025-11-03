@@ -74,7 +74,7 @@ services:
       mariadb:
         condition: service_healthy
     volumes:
-      - pkmn-server-data:/
+      - pkmn-server-data:/data
     networks:
       - pkmn-network
     restart: always
