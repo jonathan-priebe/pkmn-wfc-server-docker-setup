@@ -1,2 +1,3 @@
 .env
-/dnsmasq/_wfc.conf
+/dnsmasq/
+!/dnsmasq/wfc.example
