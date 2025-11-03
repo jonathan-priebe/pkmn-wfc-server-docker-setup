@@ -1,0 +1,48 @@
+name: Deployment Workflow Build and Push
+
+on:
+  workflow_dispatch: 
+  push:
+    branches: [main]    
+    tags:
+      - 'v*.*.*'              
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_WFC_SERVER: pkmn-wfc-server-docker-setup
+  API_URL: /api
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write   
+
+    steps:
+      # Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      # Log in to GitHub Container Registry
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build and push backend image
+      - name: Build and push backend
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ env.IMAGE_WFC_SERVER }}
+          file: ${{ env.IMAGE_WFC_SERVER }}pkmn-server/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository }}:latest
+            ${{ env.REGISTRY }}/${{ github.repository }}:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ github.repository }}:${{ github.ref_name }}
