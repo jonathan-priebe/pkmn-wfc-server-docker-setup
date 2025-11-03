@@ -2,7 +2,7 @@
 
 A Docker-based setup for hosting a custom Nintendo Wi-Fi Connection (WFC) server, enabling online functionality for various Nintendo DS and Wii titles — including, but not limited to, Pokémon games.
 
-<div align="center">
+<div align="left">
 
 ### 🧩 Based on
 
