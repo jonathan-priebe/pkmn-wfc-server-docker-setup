@@ -1,4 +1,4 @@
-name: Deployment Workflow Build and Push
+name: WFC Server Build & Deploy
 
 on:
   workflow_dispatch: 
@@ -34,9 +34,16 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      #Debug
-      - name: List repo contents
-        run: ls -R
+
+      # Copy example.env to .env and load
+      - name: Copy example.env to .env
+        run: cp example.env .env
+
+      - name: Load .env file
+        run: |
+          set -a
+          source .env
+          set +a
 
       # Build and push wfc-server image
       - name: Build and push wfc-server
@@ -45,6 +52,20 @@ jobs:
           context: ${{ env.IMAGE_WFC_SERVER }}
           file: ${{ env.IMAGE_WFC_SERVER }}/Dockerfile
           push: true
+          build-args: |
+            MARIADB_CONTAINER_NAME=${{ env.MARIADB_CONTAINER_NAME }}
+            MARIADB_HOST=${{ env.MARIADB_HOST }}
+            MARIADB_ROOT_PASSWORD=${{ env.MARIADB_ROOT_PASSWORD }}
+            MARIADB_VERSION=${{ env.MARIADB_VERSION }}
+            COWFC_DB_NAME=${{ env.COWFC_DB_NAME }}
+            COWFC_DB_USER=${{ env.COWFC_DB_USER }}
+            COWFC_DB_PASSWORD=${{ env.COWFC_DB_PASSWORD }}
+            GTS_DB_NAME=${{ env.GTS_DB_NAME }}
+            GTS_DB_USER=${{ env.GTS_DB_USER }}
+            GTS_DB_PASSWORD=${{ env.GTS_DB_PASSWORD }}
+            ADMIN_USERNAME=${{ env.ADMIN_USERNAME }}
+            ADMIN_PASSWORD=${{ env.ADMIN_PASSWORD }}
+            NETWORK_NAME=${{ env.NETWORK_NAME }}
           tags: |
             ${{ env.REGISTRY }}/${{ github.repository }}:latest
             ${{ env.REGISTRY }}/${{ github.repository }}:${{ github.sha }}
