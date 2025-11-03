@@ -30,21 +30,6 @@ Most Important Changes:
 - Volume for persistent data
 ```
 
-### MariaDB Configuration: `/pkmn-wfc-server/mariadb/`
-
-#### 3. `mariadb/conf.d/custom.cnf`
-```
-Path: ./mariadb/conf.d/custom.cnf
-Purpose: MariaDB configuration (case-insensitive tables)
-```
-
-#### 4. `mariadb/init/01-create-databases.sh`
-```
-Path: ./mariadb/init/01-create-databases.sh
-Purpose: Creates databases and users on first start
-IMPORTANT: Don't forget chmod +x!
-```
-
 ### Pokemon Server: `/pkmn-wfc-server/pkmn-server/`
 
 #### 5. `pkmn-server/Dockerfile`
@@ -58,9 +43,9 @@ Most Important Changes:
 - Database commands use remote host
 ```
 
-#### 6. `pkmn-server/openssl-1.1.1m.tar.gz`
+#### 6. `pkmn-server/build/bkup/openssl/openssl-1.1.1m.tar.gz`
 ```
-Path: ./pkmn-server/openssl-1.1.1m.tar.gz
+Path: ./pkmn-server/build/bkup/openssl/openssl-1.1.1m.tar.gz
 Status: Unchanged (must be present)
 ```
 
@@ -113,9 +98,6 @@ done
 - [ ] Place `docker-compose.yml` in root directory
 - [ ] Copy `Dockerfile` to `pkmn-server/`
 - [ ] Copy `openssl-1.1.1m.tar.gz` to `pkmn-server/`
-- [ ] Copy `custom.cnf` to `mariadb/conf.d/`
-- [ ] Copy `01-create-databases.sh` to `mariadb/init/`
-- [ ] Execute `chmod +x mariadb/init/01-create-databases.sh`
 - [ ] Create `wfc.conf` in `dnsmasq/` (if not already present)
 - [ ] Run `docker-compose up -d`
 
