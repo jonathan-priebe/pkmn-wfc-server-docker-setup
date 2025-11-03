@@ -29,6 +29,10 @@ Docker-based setup for running a Pokémon Wi-Fi Connection (WFC) server to enabl
 - [Troubleshooting](#troubleshooting)
 - [Network Ports](#network-ports)
 - [Security Notes](#security-notes)
+- [Legal Notice / Disclaimer](#legal-notice--disclaimer)
+   - [Important Legal Information](#important-legal-information)
+   - [Warranty Disclaimer](#warranty-disclaimer)
+   - [Takedown Policy](#takedown-policy)
 - [Credits](#credits)
 - [License](#license)
 
@@ -560,6 +564,30 @@ This setup uses **intentionally weak** SSL/TLS configurations (SSLv3, weak ciphe
 4. **Updates**: Keep Docker and base images updated
 5. **Backups**: Regular database backups
 
+## Legal Notice / Disclaimer
+
+This project is an independent, non-commercial fan project for game preservation and educational purposes. It is not affiliated with, endorsed by, or connected to Nintendo Co., Ltd., The Pokémon Company, Game Freak, or any of their subsidiaries.
+
+### Important Legal Information
+
+- **No Commercial Use**: This server is provided free of charge for personal, non-commercial use only
+- **Educational Purpose**: Created for learning about network protocols and game preservation
+- **No Official Content**: Does not distribute, host, or provide any Nintendo proprietary software, ROMs, or game files
+- **Legitimate Ownership**: Users must own legitimate copies of the games they wish to use with this server
+- **Trademark Notice**: All trademarks, service marks, trade names, and logos referenced are the property of their respective owners
+
+### Warranty Disclaimer
+
+This software is provided "as is" without warranty of any kind, express or implied. Use at your own risk.
+
+### Takedown Policy
+
+If you represent Nintendo, The Pokémon Company, or any related entity and have concerns about this project, please contact [your contact info] before taking legal action. We will cooperate fully with any legitimate requests.
+
+---
+
+**This is a fan preservation project. Please support the official Pokémon games and Nintendo products!**
+
 ## Credits
 
 This project builds upon the excellent work of:
@@ -568,6 +596,7 @@ This project builds upon the excellent work of:
 - **[dwc_network_server_emulator](https://github.com/EnergyCube/dwc_network_server_emulator)** by EnergyCube - GameSpy protocol implementation
 - **[pkmn-classic-framework](https://github.com/mm201/pkmn-classic-framework)** by mm201 - GTS implementation
 - **[barronwaffles/dwc_network_server_emulator](https://github.com/barronwaffles/dwc_network_server_emulator)** - Alternative maintained fork
+- **[u1f992/pkmn-wfc-server](https://github.com/u1f992/pkmn-wfc-server)** - Docker Setup inspiration
 
 Special thanks to the Nintendo DS homebrew and preservation community!
 
@@ -585,3 +614,5 @@ Individual components maintain their original licenses:
 **Made with ❤️ for Pokémon preservation**
 
 For issues and contributions, please visit: [GitHub Repository](https://github.com/jonathan-priebe/pkmn-wfc-server-docker-setup)
+
+- 📫 Reach me via GitHub or [LinkedIn](https://www.linkedin.com/in/jonathan-p-34471b1a5/)
