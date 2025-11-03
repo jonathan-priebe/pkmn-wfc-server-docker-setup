@@ -34,6 +34,9 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      #Debug
+      - name: List repo contents
+        run: ls -R
 
       # Build and push wfc-server image
       - name: Build and push wfc-server
