@@ -35,12 +35,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Build and push backend image
-      - name: Build and push backend
+      # Build and push wfc-server image
+      - name: Build and push wfc-server
         uses: docker/build-push-action@v3
         with:
           context: ${{ env.IMAGE_WFC_SERVER }}
-          file: ${{ env.IMAGE_WFC_SERVER }}pkmn-server/Dockerfile
+          file: ${{ env.IMAGE_WFC_SERVER }}/pkmn-server/Dockerfile
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ github.repository }}:latest
