@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_WFC_SERVER: pkmn-wfc-server-docker-setup
+  IMAGE_WFC_SERVER: ./pkmn-wfc-server-docker-setup
   API_URL: /api
 
 jobs:
@@ -39,7 +39,7 @@ jobs:
       - name: Build and push wfc-server
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ${{ env.IMAGE_WFC_SERVER }}
           file: ${{ env.IMAGE_WFC_SERVER }}/pkmn-server/Dockerfile
           push: true
           tags: |
