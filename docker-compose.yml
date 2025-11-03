@@ -24,8 +24,8 @@ services:
       - mariadb-data:/var/lib/mysql
       #- ./mariadb/init:/docker-entrypoint-initdb.d
       #- ./mariadb/conf.d:/etc/mysql/conf.d
-    ports:
-      - "3306:3306/tcp"
+    #ports:
+    #  - "3306:3306/tcp"
     networks:
       - pkmn-network
     healthcheck:
@@ -73,6 +73,8 @@ services:
     depends_on:
       mariadb:
         condition: service_healthy
+    volumes:
+      - pkmn-server-data:/
     networks:
       - pkmn-network
     restart: always
@@ -83,5 +85,7 @@ networks:
     driver: bridge
 
 volumes:
+  pkmn-server-data:
+    name: pkmn-server-data
   mariadb-data:
     name: pkmn-mariadb-data
