@@ -1,6 +1,18 @@
-# Pokemon WiFi Connection Server (with separate MariaDB)
+# Nintendo WFC Server (with separate MariaDB)
 
-Docker-based setup for running a Pokémon Wi-Fi Connection (WFC) server to enable online features for Nintendo DS/Wii Pokémon games.
+A Docker-based setup for hosting a custom Nintendo Wi-Fi Connection (WFC) server, enabling online functionality for various Nintendo DS and Wii titles — including, but not limited to, Pokémon games.
+
+<div align="left">
+
+### 🧩 Based on
+
+This project builds upon the work of several foundational repositories:
+
+- [CoWFC](https://github.com/jonathan-priebe/CoWFC.git) – Admin Panel for WFC server  
+- [DWC Network Emulator](https://github.com/jonathan-priebe/dwc_network_server_emulator.git) – Emulator of Nintendo's WFC infrastructure  
+- [Poké Classic Framework](https://github.com/jonathan-priebe/pkmn-classic-framework.git) – Framework for Pokémon-specific WFC services
+
+</div>
 
 ## Table of Contents
 
