@@ -50,7 +50,9 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ${{ env.IMAGE_WFC_SERVER }}
-          file: ${{ env.IMAGE_WFC_SERVER }}/Dockerfile
+          file: |
+            ${{ env.IMAGE_WFC_SERVER }}/Dockerfile
+            ${{ env.IMAGE_WFC_SERVER }}/entrypoint.sh
           push: true
           build-args: |
             MARIADB_CONTAINER_NAME=${{ env.MARIADB_CONTAINER_NAME }}
