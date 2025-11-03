@@ -6,20 +6,53 @@ services:
     volumes:
       - ./dnsmasq/wfc.conf:/etc/dnsmasq.d/wfc.conf
     ports:
+      - "53:53/tcp"
       - "53:53/udp"
     cap_add:
       - NET_ADMIN
+    networks:
+      - pkmn-network
+
+  mariadb:
+    container_name: ${MARIADB_CONTAINER_NAME}
+    image: mariadb:${MARIADB_VERSION}
+    restart: always
+    command: --lower-case-table-names=1
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - mariadb-data:/var/lib/mysql
+      #- ./mariadb/init:/docker-entrypoint-initdb.d
+      #- ./mariadb/conf.d:/etc/mysql/conf.d
+    ports:
+      - "3306:3306/tcp"
+    networks:
+      - pkmn-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MARIADB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   pkmn-server:
     container_name: pkmn-server
     build:
+      context: .
       dockerfile: ./pkmn-server/Dockerfile
       args:
-        - ADMIN_USERNAME=admin
-        - ADMIN_PASSWORD=opensesame
+        - ADMIN_USERNAME=${ADMIN_USERNAME}
+        - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+        - MARIADB_HOST=${MARIADB_CONTAINER_NAME}
+        - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+        - COWFC_DB_NAME=${COWFC_DB_NAME}
+        - COWFC_DB_USER=${COWFC_DB_USER}
+        - COWFC_DB_PASSWORD=${COWFC_DB_PASSWORD}
+        - GTS_DB_NAME=${GTS_DB_NAME}
+        - GTS_DB_USER=${GTS_DB_USER}
+        - GTS_DB_PASSWORD=${GTS_DB_PASSWORD}
     ports:
-      - "8880:80/tcp"
+      - "80:80/tcp"
       - "443:443/tcp"
-      - "3306:3306/tcp"
       - "8000:8000/tcp"
       - "9000:9000/tcp"
       - "9001:9001/tcp"
@@ -28,9 +61,27 @@ services:
       - "9003:9003/tcp"
       - "9998:9998/tcp"
       - "27500:27500/tcp"
+      - "27500:27500/udp"
       - "27900:27900/tcp"
+      - "27900:27900/udp"
       - "27901:27901/tcp"
+      - "27901:27901/udp"
       - "28910:28910/tcp"
       - "29900:29900/tcp"
       - "29901:29901/tcp"
       - "29920:29920/tcp"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - pkmn-network
+    restart: always
+
+networks:
+  pkmn-network:
+    name: ${NETWORK_NAME}
+    driver: bridge
+
+volumes:
+  mariadb-data:
+    name: pkmn-mariadb-data

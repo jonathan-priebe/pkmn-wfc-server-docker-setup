@@ -1,0 +1,3 @@
+.env
+/dnsmasq/
+!/dnsmasq/wfc.example
