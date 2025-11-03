@@ -44,7 +44,8 @@ jobs:
           set -a
           source .env
           set +a
-
+      - name: Check entrypoint.sh presence
+        run: test -f ./pkmn-server/entrypoint.sh
       # Build and push wfc-server image
       - name: Build and push wfc-server
         uses: docker/build-push-action@v3
