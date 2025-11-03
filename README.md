@@ -157,47 +157,47 @@ address=/nintendowifi.net/YOUR_SERVER_IP
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  HOST SYSTEM (Your Server IP)                               │
-│                                                               │
+│                                                             │
 │  ┌──────────────────────────────────────────────────────┐   │
-│  │  Container: dnsmasq                                   │   │
-│  │  Port: 53 UDP                                         │   │
-│  │  → Redirects *.nintendowifi.net to server IP        │   │
+│  │  Container: dnsmasq                                  │   │
+│  │  Port: 53 UDP                                        │   │
+│  │  → Redirects *.nintendowifi.net to server IP         │   │
 │  └──────────────────────────────────────────────────────┘   │
-│                                                               │
+│                                                             │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │  Container: mariadb (network: host)                  │   │
-│  │  Port: 3306                                           │   │
-│  │  Databases:                                           │   │
+│  │  Port: 3306                                          │   │
+│  │  Databases:                                          │   │
 │  │    ├── cowfc (CoWFC Admin Panel)                     │   │
 │  │    └── gts (Pokemon GTS, utf8mb4)                    │   │
 │  └──────────────────────────────────────────────────────┘   │
-│                                                               │
+│                                                             │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │  Container: pkmn-server (network: host)              │   │
-│  │                                                        │   │
+│  │                                                      │   │
 │  │  ┌──────────────────────────────────────────────┐    │   │
-│  │  │  Apache 2.4.65 + OpenSSL 1.1.1m             │    │   │
-│  │  │  Port 80:  HTTP                               │    │   │
+│  │  │  Apache 2.4.65 + OpenSSL 1.1.1m              │    │   │
+│  │  │  Port 80:  HTTP                              │    │   │
 │  │  │  Port 443: HTTPS (SSLv3 for Nintendo DS)     │    │   │
-│  │  │                                               │    │   │
-│  │  │  VirtualHosts:                                │    │   │
+│  │  │                                              │    │   │
+│  │  │  VirtualHosts:                               │    │   │
 │  │  │  ├─ :80 → CoWFC Web (PHP)                    │    │   │
 │  │  │  ├─ :80 → gamestats2.gs.nintendowifi.net     │    │   │
 │  │  │  │         (GTS - ASP.NET/Mono)              │    │   │
 │  │  │  └─ :443 → nas.nintendowifi.net              │    │   │
 │  │  │            (Proxy → NAS Server :9000)        │    │   │
 │  │  └──────────────────────────────────────────────┘    │   │
-│  │                                                        │   │
+│  │                                                      │   │
 │  │  ┌──────────────────────────────────────────────┐    │   │
-│  │  │  Python Master Server (Python 2.7)          │    │   │
-│  │  │  /var/www/dwc_network_server_emulator/      │    │   │
-│  │  │                                               │    │   │
-│  │  │  Services:                                    │    │   │
+│  │  │  Python Master Server (Python 2.7)           │    │   │
+│  │  │  /var/www/dwc_network_server_emulator/       │    │   │
+│  │  │                                              │    │   │
+│  │  │  Services:                                   │    │   │
 │  │  │  ├─ NAS Server (Authentication)              │    │   │
 │  │  │  ├─ QR Server (Master Server List)           │    │   │
 │  │  │  ├─ GP Server (Game Profiles)                │    │   │
 │  │  │  └─ NAT Negotiation (P2P Trading)            │    │   │
-│  │  │                                               │    │   │
+│  │  │                                              │    │   │
 │  │  │  SQLite DB: gpcm.db                          │    │   │
 │  │  │  (Sessions, Users, Game Profiles)            │    │   │
 │  │  └──────────────────────────────────────────────┘    │   │
@@ -411,6 +411,11 @@ SHOW VARIABLES LIKE 'character_set%';"
 
 ### Common Issues
 
+#### Issue: Wifi Connection Errors:
+
+For issue tracking, you can find common errors in this [Wiki](https://github.com/barronwaffles/dwc_network_server_emulator/wiki/Troubleshooting)
+
+
 #### Issue: pkmn-server won't start
 
 **Solution**: Check if MariaDB is healthy
@@ -425,7 +430,7 @@ docker-compose logs mariadb
 1. Verify network configuration in `docker-compose.yml`
 2. Ensure MariaDB container is running: `docker ps`
 3. Check environment variables in `.env`
-4. Test connection: `docker exec pkmn-server mysql -h localhost -uroot -p`
+4. Test connection: `docker exec pkmn-server mysql -h $MARIADB_HOST -uroot -p`
 
 #### Issue: Admin login doesn't work
 
