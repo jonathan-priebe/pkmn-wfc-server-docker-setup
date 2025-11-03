@@ -42,8 +42,8 @@ jobs:
       - name: Build and push wfc-server
         uses: docker/build-push-action@v3
         with:
-          context: ${{ env.IMAGE_WFC_SERVER }}
-          file: ${{ env.IMAGE_WFC_SERVER }}/Dockerfile
+          context: ./pkmn-server
+          file: ./pkmn-server/Dockerfile
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ github.repository }}:latest
