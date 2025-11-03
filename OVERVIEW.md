@@ -112,15 +112,15 @@ done
        ▼
 ┌─────────────────────────────────────┐
 │          pkmn-server                │
-│  ┌─────────────────────────────┐   │
-│  │  Apache + Mono (GTS/CoWFC)  │   │
-│  │  Python (DWC Server)        │   │
-│  └─────────────────────────────┘   │
+│  ┌─────────────────────────────┐    │
+│  │  Apache + Mono (GTS/CoWFC)  │    │
+│  │  Python (DWC Server)        │    │
+│  └─────────────────────────────┘    │
 │              │                      │
 │              │ mysql-client         │
 │              ▼                      │
 │     MariaDB Connection              │
-│     Host: mariadb-pkmn             │
+│     Host: mariadb-pkmn              │
 └─────────────────────────────────────┘
                 │
                 │ TCP Connection
