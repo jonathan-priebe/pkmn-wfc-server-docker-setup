@@ -275,6 +275,7 @@ Default credentials (change in `.env`):
 2. **Supported Features:**
    - ✅ Mystery Gifts / Wonder Cards
    - ✅ GTS (Global Trade Station)
+   - ✅ Battle Tower
    - ⚠️ Wi-Fi Plaza - Coming soon
    - ⚠️ Wi-Fi Club (Player vs Player) - Coming soon
    - & many more ...
