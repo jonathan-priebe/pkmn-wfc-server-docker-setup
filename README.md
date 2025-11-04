@@ -4,7 +4,7 @@ A Docker-based setup for hosting a custom Nintendo Wi-Fi Connection (WFC) server
 
 <div align="left">
 
-### 🧩 Based on
+### Based on
 
 This project builds upon the work of several foundational repositories:
 
