@@ -1,4 +1,4 @@
-name: WFC Server Build & Deploy
+name: WFC Server Build & Push
 
 on:
   workflow_dispatch:
