@@ -600,7 +600,7 @@ This software is provided "as is" without warranty of any kind, express or impli
 
 ### Takedown Policy
 
-If you represent Nintendo, The Pokémon Company, or any related entity and have concerns about this project, please contact [your contact info] before taking legal action. We will cooperate fully with any legitimate requests.
+If you represent Nintendo, The Pokémon Company, or any related entity and have concerns about this project, please contact [me](#made-with-️-for-pokémon-preservation) before taking legal action. I will cooperate fully with any legitimate requests.
 
 ---
 
@@ -629,7 +629,7 @@ Individual components maintain their original licenses:
 
 ---
 
-**Made with ❤️ for Pokémon preservation**
+## **Made with ❤️ for Pokémon preservation**
 
 For issues and contributions, please visit: [GitHub Repository](https://github.com/jonathan-priebe/pkmn-wfc-server-docker-setup)
 
