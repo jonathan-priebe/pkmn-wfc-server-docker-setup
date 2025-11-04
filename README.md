@@ -275,9 +275,9 @@ Default credentials (change in `.env`):
 2. **Supported Features:**
    - ✅ Mystery Gifts / Wonder Cards
    - ✅ GTS (Global Trade Station)
-   - ✅ Wi-Fi Plaza
-   - ✅ Wi-Fi Club (Player vs Player)
-   - ⚠️ P2P Trading (may require additional NAT configuration)
+   - ⚠️ Wi-Fi Plaza - Comming soon
+   - ⚠️ Wi-Fi Club (Player vs Player) - Comming soon
+   - & many more ...
 
 ### Supported Games
 
