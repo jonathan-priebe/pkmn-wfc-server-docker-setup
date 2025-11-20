@@ -2,6 +2,10 @@
 
 A Docker-based setup for hosting a custom Nintendo Wi-Fi Connection (WFC) server, enabling online functionality for various Nintendo DS and Wii titles — including, but not limited to, Pokémon games.
 
+**NOTE**
+
+This repository is now out of scope and will be discontinued. But no worries — a replacement project is already underway! Stay tuned and keep an eye on [dwc-server-container-setup](https://github.com/jonathan-priebe/dwc-server-container-setup)!
+
 <div align="left">
 
 ### Based on
